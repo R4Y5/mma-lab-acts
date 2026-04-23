@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — Your Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../assets/css/navbar.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d0d0d;
+      color: #e0e0d8;
+      font-family: "DM Mono", monospace;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .page-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #e8ff6b;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 {
+      font-family: "DM Serif Display", serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 3rem;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .project-card {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 1.75rem;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: default;
+    }
+
+    .project-card:hover {
+      border-color: rgba(232, 255, 107, 0.35);
+      background: rgba(232, 255, 107, 0.03);
+    }
+
+    .project-num {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-family: "DM Serif Display", serif;
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-desc {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.7;
+    }
+
+    .project-tag {
+      display: inline-block;
+      margin-top: 1.25rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #e8ff6b;
+      border: 1px solid rgba(232, 255, 107, 0.3);
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <main>
+    <section class="page">
+      <p class="page-label">Selected work</p>
+      <h1>Projects</h1>
+      <div class="projects-grid">
+        <div class="project-card">
+          <p class="project-num">01</p>
+          <h2 class="project-title">Solar System</h2>
+          <p class="project-desc">A full visual language for a sustainable fashion label — logotype, color, and motion guidelines.</p>
+          <span class="project-tag">Rendering</span>
+          <span class="project-tag">Coding</span>
+        </div>
+        <div class="project-card">
+          <p class="project-num">02</p>
+          <h2 class="project-title">Rotoscope</h2>
+          <p class="project-desc">Improved checkout conversion by 31% through focused UX research and iterative prototyping.</p>
+          <span class="project-tag">Rotoscoping</span>
+          <span class="project-tag">Rendering</span>
+        </div>
+        <!--<div class="project-card">
+          <p class="project-num">03</p>
+          <h2 class="project-title">Interactive Data Dashboard</h2>
+          <p class="project-desc">Real-time analytics platform built with vanilla JS, featuring live filtering and CSV export.</p>
+          <span class="project-tag">Development</span>
+        </div>
+      -->
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/js/navbar.js"></script>
+</body>
+</html>

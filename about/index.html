@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Your Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+
+  <!-- Shared navbar styles -->
+  <link rel="stylesheet" href="../assets/css/navbar.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d0d0d;
+      color: #e0e0d8;
+      font-family: "DM Mono", monospace;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .page-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #e8ff6b;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 {
+      font-family: "DM Serif Display", serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 2.5rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1.5px;
+      background: #e8ff6b;
+      margin: 2.5rem 0;
+    }
+
+    .about-layout {
+      display: flex;
+      align-items: flex-start;   /* aligns text and image at the top */
+      gap: 2rem;                 /* spacing between text and image */
+    }
+
+    .about-text {
+      flex: 2;                   /* text takes more space */
+    }
+
+    .about-image {
+      flex: 1;                   /* image takes less space */
+      display: flex;
+      justify-content: center;
+    }
+
+    .profile-img {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;        /* circular portrait */
+      object-fit: cover;
+      border: 2px solid #e8ff6b; /* accent border */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ① Navbar placeholder -->
+  <div id="navbar"></div>
+
+  <main>
+    <section class="page about-layout">
+      <div class="about-text">
+        <p class="page-label">About me</p>
+        <h1>Behind the Frames.</h1>
+        <p>
+          Hey there!
+        </p>
+        <p>
+          This website was created for educational purposes only and will serve as a portfolio 
+          featuring the projects I made for Multimedia and Authoring Laboratory class.
+        </p>
+        <div class="divider"></div>
+        <p>John Raymund M. Turallo <br>BSIT-NS-2A-T</p>
+      </div>
+
+      <!-- Profile image on the right -->
+      <div class="about-image">
+        <img src="../assets/img/ray.png" 
+            alt="ray" 
+            class="profile-img" />
+      </div>
+    </section>
+  </main>
+
+  <!-- ② Shared navbar script -->
+  <script src="../assets/js/navbar.js"></script>
+</body>
+</html>

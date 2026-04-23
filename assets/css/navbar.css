@@ -1,0 +1,227 @@
+/* ─────────────────────────────────────────────
+   navbar.css  —  shared navigation styles
+   Import this in every page via <link>.
+   ───────────────────────────────────────────── */
+
+/* ── Tokens ── */
+:root {
+  --nav-height: 64px;
+  --nav-bg: #0d0d0d;
+  --nav-border: rgba(255, 255, 255, 0.07);
+  --nav-text: rgba(255, 255, 255, 0.55);
+  --nav-text-hover: #ffffff;
+  --nav-active: #e8ff6b;       /* lime accent — change to your brand color */
+  --nav-logo-font: "DM Serif Display", Georgia, serif;
+  --nav-link-font: "DM Mono", "Courier New", monospace;
+  --nav-radius: 0px;
+  --nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --mobile-menu-bg: #111111;
+}
+
+/* ── Reset ── */
+#navbar * {
+  box-sizing: border-box;
+  margin: 0 0.8rem;
+  padding: 0;
+}
+
+/* ── Outer wrapper ── */
+#navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  /* Reserve space so page content doesn't jump */
+}
+
+/* ── Nav bar ── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  height: var(--nav-height);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  transition: box-shadow var(--nav-transition), border-color var(--nav-transition);
+  position: relative;
+}
+
+.navbar.scrolled {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Logo ── */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--nav-logo-font);
+  font-size: 1.2rem;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: opacity var(--nav-transition);
+}
+
+.nav-logo:hover {
+  transform: rotate(90deg);
+}
+
+.nav-logo {
+  transition: transform 0.4s ease;
+}
+.logo-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--nav-active);
+  flex-shrink: 0;
+}
+
+/* ── Desktop links ── */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  }
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--nav-link-font);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--nav-text);
+  text-decoration: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 4px;
+  transition: color var(--nav-transition), background var(--nav-transition);
+}
+
+.nav-link:hover {
+  color: var(--nav-text-hover);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+  color: var(--nav-active);
+}
+
+/* Animated underline */
+.nav-underline {
+  display: block;
+  height: 1.5px;
+  width: 0;              /* collapsed */
+  opacity: 0;            /* invisible */
+  background: var(--nav-active);
+  border-radius: 2px;
+  transition: width var(--nav-transition), opacity var(--nav-transition);
+}
+
+.nav-link:hover .nav-underline,
+.nav-link.active .nav-underline {
+  width: 100%;
+  opacity: 1;
+}
+
+
+/* ── Hamburger button (hidden on desktop) ── */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--nav-border);
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 8px;
+  transition: border-color var(--nav-transition);
+}
+
+.nav-toggle:hover { border-color: rgba(255,255,255,0.25); }
+
+.nav-toggle span {
+  display: block;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 2px;
+  transition: transform var(--nav-transition), opacity var(--nav-transition);
+  transform-origin: center;
+}
+
+/* Hamburger → X animation */
+.navbar.menu-open .nav-toggle span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.navbar.menu-open .nav-toggle span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.navbar.menu-open .nav-toggle span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ── Mobile dropdown ── */
+.mobile-menu {
+  display: none;    /* JS toggles visibility via .menu-open */
+  position: absolute;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  background: var(--mobile-menu-bg);
+  border-bottom: 1px solid var(--nav-border);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar.menu-open .mobile-menu {
+  max-height: 320px;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  padding: 0.5rem 0 1rem;
+}
+
+.mobile-link {
+  display: block;
+  font-family: var(--nav-link-font);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--nav-text);
+  text-decoration: none;
+  padding: 0.8rem 2rem;
+  border-left: 2px solid transparent;
+  transition: color var(--nav-transition), border-color var(--nav-transition),
+              background var(--nav-transition);
+}
+
+.mobile-link:hover {
+  color: var(--nav-text-hover);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mobile-link.active {
+  color: var(--nav-active);
+  border-left-color: var(--nav-active);
+}
+
+/* ── Responsive breakpoint ── */
+@media (max-width: 640px) {
+  .nav-links    { display: none; }
+  .nav-toggle   { display: flex; }
+  .mobile-menu  { display: block; }
+  .navbar { padding: 0 1.25rem; }
+}
