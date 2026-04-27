@@ -1,103 +1,114 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home — ITCI231</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="icon" href="./assets/img/sun.png" />
-  <link rel="stylesheet" href="./assets/css/navbar.css" />
+    <link rel="icon" href="./assets/img/sun.png" />
+    <link rel="stylesheet" href="./assets/css/navbar.css" />
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    body {
-      background: #0d0d0d;
-      color: #e0e0d8;
-      font-family: "DM Mono", monospace;
-      min-height: 100vh;
-    }
+      body {
+        background: #0d0d0d;
+        color: #e0e0d8;
+        font-family: "DM Mono", monospace;
+        min-height: 100vh;
+      }
 
-    .hero {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: calc(100vh - 64px);
-      padding: 4rem 3rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
+      .hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: calc(100vh - 64px);
+        padding: 4rem 3rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
 
-    .hero-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #e8ff6b;
-      margin-bottom: 1.5rem;
-    }
+      .hero-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #e8ff6b;
+        margin-bottom: 1.5rem;
+      }
 
-    .hero-title {
-      font-family: "DM Serif Display", serif;
-      font-size: clamp(2.5rem, 6vw, 5rem);
-      color: #ffffff;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
-    }
+      .hero-title {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        color: #ffffff;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+      }
 
-    .hero-title em {
-      font-style: italic;
-      color: #e8ff6b;
-    }
+      .hero-title em {
+        font-style: italic;
+        color: #e8ff6b;
+      }
 
-    .hero-sub {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.45);
-      line-height: 1.7;
-      max-width: 480px;
-      margin-bottom: 3rem;
-    }
+      .hero-sub {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.45);
+        line-height: 1.7;
+        max-width: 480px;
+        margin-bottom: 3rem;
+      }
 
-    .hero-cta {
-      display: inline-block;
-      font-family: "DM Mono", monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #0d0d0d;
-      background: #e8ff6b;
-      padding: 0.75rem 1.75rem;
-      text-decoration: none;
-      border-radius: 3px;
-      transition: opacity 0.2s;
-    }
+      .hero-cta {
+        display: inline-block;
+        font-family: "DM Mono", monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #0d0d0d;
+        background: #e8ff6b;
+        padding: 0.75rem 1.75rem;
+        text-decoration: none;
+        border-radius: 3px;
+        transition: opacity 0.2s;
+      }
 
-    .hero-cta:hover { opacity: 0.85; }
-  </style>
-</head>
-<body>
+      .hero-cta:hover {
+        opacity: 0.85;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar"></div>
 
-  <div id="navbar"></div>
+    <main>
+      <section class="hero">
+        <p class="hero-label">ITCI231-LAB-T — 2026</p>
+        <h1 class="hero-title">
+          - One <em>frame</em><br />
+          at a time.
+        </h1>
+        <p class="hero-sub">
+          A website showcasing the activities made for Multimedia and Authoring
+          Laboratory class.
+        </p>
+        <!-- Fixed: removed explicit filename, directory link is cleaner -->
+        <a href="./projects/" class="hero-cta">View Projects</a>
+      </section>
+    </main>
 
-  <main>
-    <section class="hero">
-      <p class="hero-label">ITCI231-LAB-T — 2026</p>
-      <h1 class="hero-title">
-        - One <em>frame</em><br/>
-        at a time.
-      </h1>
-      <p class="hero-sub">
-        A website showcasing the activities made for Multimedia and Authoring Laboratory class.
-      </p>
-      <!-- Fixed: removed explicit filename, directory link is cleaner -->
-      <a href="./projects/" class="hero-cta">View Projects</a>
-    </section>
-  </main>
-
-  <script src="./assets/js/navbar.js"></script>
-</body>
+    <script src="./assets/js/navbar.js"></script>
+  </body>
 </html>
