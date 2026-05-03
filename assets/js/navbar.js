@@ -4,9 +4,9 @@
 
   /* ── Nav links config ── */
   const links = [
-    { href: `${base}`,                   label: "Home"     },
-    { href: `${base}projects/`,          label: "Projects" },
-    { href: `${base}about/`,             label: "About"    },
+    { href: `${base}index.html`,                   label: "Home"     },
+    { href: `${base}projects/index.html`,          label: "Projects" },
+    { href: `${base}about/index.html`,             label: "About"    },
   ];
 
   /* ── Determine active link by current path ── */
