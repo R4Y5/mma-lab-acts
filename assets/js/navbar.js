@@ -1,21 +1,23 @@
 (function () {
   /* ── Detect if we're at the repo root or one level deep ── */
-  const base = "/mma-lab-acts/";
+  const path   = window.location.pathname;
+  const isRoot = /\/mma-lab-acts\/?(?:index\.html)?$/.test(path);
+  const base   = isRoot ? "./" : "../";
 
   /* ── Nav links config ── */
   const links = [
-    { href: `${base}index.html`,                   label: "Home"     },
-    { href: `${base}projects/index.html`,          label: "Projects" },
-    { href: `${base}about/index.html`,             label: "About"    },
+    { href: `${base}index.html`,          label: "Home"     },
+    { href: `${base}projects/index.html`, label: "Projects" },
+    { href: `${base}about/index.html`,    label: "About"    },
   ];
 
   /* ── Determine active link by current path ── */
   function isActive(label) {
-  if (label === "Home")     return !path.includes("/projects/") && !path.includes("/about/");
-  if (label === "Projects") return path.includes("/projects/");
-  if (label === "About")    return path.includes("/about/");
-  return false;
-}
+    if (label === "Home")     return isRoot;
+    if (label === "Projects") return path.includes("/projects/");
+    if (label === "About")    return path.includes("/about/");
+    return false;
+  }
 
   /* ── Build desktop nav links ── */
   const desktopLinks = links.map(({ href, label }) => `
@@ -42,7 +44,8 @@
         <img
           src="${base}assets/img/sun.png" width="40"
           alt="Site logo"
-          class="nav-logo-img"/>
+          class="nav-logo-img"
+        />
       </a>
 
       <ul class="nav-links">
