@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar System — ITCI231</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+
+  <link rel="icon" href="../assets/img/sun.png" />
+  <link rel="stylesheet" href="../assets/css/navbar.css" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #e8ff6b;
+      --bg: #0d0d0d;
+      --text: #e0e0d8;
+      --muted: rgba(255,255,255,0.38);
+      --border: rgba(255,255,255,0.07);
+      --accent-border: rgba(232,255,107,0.28);
+      --accent-bg: rgba(232,255,107,0.04);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Mono", monospace;
+      min-height: 100vh;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 2rem 3rem;
+    }
+
+    .breadcrumb {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--accent); }
+
+    .breadcrumb span {
+      margin: 0 0.5rem;
+      opacity: 0.4;
+    }
+
+    .page-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+
+    .page-header h1 {
+      font-family: "DM Serif Display", serif;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .page-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 520px;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── AGE CALCULATOR ── */
+    .age-calculator {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .calc-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .calc-inner {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .calc-prompt {
+      font-size: 0.82rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .calc-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    #age-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: #fff;
+      font-family: "DM Mono", monospace;
+      font-size: 1.1rem;
+      padding: 0.55rem 3.5rem 0.55rem 1rem;
+      width: 130px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      -moz-appearance: textfield;
+    }
+
+    #age-input::-webkit-outer-spin-button,
+    #age-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    #age-input:focus {
+      border-color: var(--accent-border);
+      background: var(--accent-bg);
+    }
+
+    .calc-unit {
+      position: absolute;
+      right: 0.85rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .calc-hint {
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.18);
+      letter-spacing: 0.05em;
+    }
+
+    .calc-active-badge {
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      background: var(--accent-bg);
+      padding: 3px 10px;
+      border-radius: 3px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .calc-active-badge.visible { display: flex; }
+
+    .badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── PLANET AGE STAT ── */
+    .planet-age-stat {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .planet-age-stat.visible { display: block; }
+
+    .planet-age-stat .stat-label {
+      color: var(--accent);
+      opacity: 0.7;
+    }
+
+    .planet-age-stat .stat-value {
+      color: var(--accent);
+    }
+
+    /* ── PLANETS SECTION ── */
+    .planets-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    .planets-section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── PLANET ENTRY ── */
+    .planet-entry {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      transition: border-color 0.25s;
+    }
+
+    .planet-entry:hover {
+      border-color: var(--accent-border);
+    }
+
+    .planet-media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+      display: block;
+    }
+
+    .planet-visual {
+      position: relative;
+      min-height: 220px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .planet-visual-inner {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: var(--planet-color, #333);
+      box-shadow:
+        inset -18px -10px 30px rgba(0,0,0,0.55),
+        0 0 40px var(--planet-glow, rgba(255,255,255,0.04));
+      transition: transform 0.4s ease;
+    }
+
+    .planet-entry:hover .planet-visual-inner {
+      transform: scale(1.07);
+    }
+
+    .planet-visual.has-ring .planet-visual-inner::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotateX(70deg);
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 12px solid rgba(210, 190, 140, 0.35);
+      pointer-events: none;
+    }
+
+    .planet-num {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.15);
+    }
+
+    .planet-details {
+      padding: 2rem 2.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+
+    .planet-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .planet-name {
+      font-family: "DM Serif Display", serif;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    .planet-type {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .planet-description {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .planet-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .stat {
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+
+    .stat-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-value {
+      font-size: 0.78rem;
+      color: #fff;
+    }
+
+    .planet-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .planet-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    /* ── MEDIA RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .planet-entry {
+        grid-template-columns: 1fr;
+      }
+
+      .planet-visual {
+        min-height: 160px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .planet-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .calc-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+    }
+
+    /* ── ADD PLANET PLACEHOLDER ── */
+    .add-planet {
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 6px;
+      padding: 2.5rem;
+      text-align: center;
+      color: rgba(255,255,255,0.15);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: default;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .add-planet:hover {
+      border-color: var(--accent-border);
+      color: var(--accent);
+    }
+
+    .add-planet-icon {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      opacity: 0.4;
+    }
+
+    .planet-yt {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+      text-decoration: none;
+    }
+
+    .yt-label {
+      font-size: 0.68rem;
+      text-align: justify;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .planet-yt:hover .yt-label { color: #e8ff6b; }
+  </style>
+</head>
+<body>
+
+  <div id="navbar"></div>
+
+  <main>
+
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+      <p class="page-label">01 — Rendering · 3D Modeling · Coding</p>
+      <h1>The <em>Solar</em><br>System</h1>
+      <p class="page-desc">
+        A compilation of 3D models and visualizations of each planet in our solar system,
+        built frame by frame with attention to scale, texture, and orbital detail.
+      </p>
+    </header>
+
+    <div class="section-divider"></div>
+
+    <!-- AGE CALCULATOR -->
+    <section class="age-calculator">
+      <p class="calc-label">Age Calculator — Planetary Years</p>
+      <div class="calc-inner">
+        <span class="calc-prompt">Your age on Earth</span>
+        <div class="calc-input-wrap">
+          <input
+            type="number"
+            id="age-input"
+            min="1"
+            max="999"
+            placeholder="0"
+            aria-label="Enter your age in Earth years"
+          />
+          <span class="calc-unit">yrs</span>
+        </div>
+        <span class="calc-hint">↓ equivalent ages appear in each planet's stats</span>
+        <div class="calc-active-badge" id="calc-badge">
+          <span class="badge-dot"></span>
+          Calculator active
+        </div>
+      </div>
+    </section>
+
+    <!-- PLANETS LISTING -->
+    <section class="planets-section">
+      <p class="planets-section-label">Bodies — 1 Star · 8 planets · 1 Satellite · 1 Dwarf</p>
+
+      <!-- ── SUN ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/sun.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">00</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Sun</h2>
+              <span class="planet-type">Star</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            The star at the center of our solar system. A nearly perfect sphere of hot plasma,
+            the Sun accounts for 99.86% of the total mass of the solar system. Its core reaches
+            temperatures of around 15 million °C, fusing hydrogen into helium and radiating
+            the energy that drives all life on Earth.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">1,392,700 km</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Surface Temp.</p>
+              <p class="stat-value">~5,500 °C</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Age</p>
+              <p class="stat-value">~4.6 Gyr</p>
+            </div>
+          </div>
+          <div class="planet-tags">
+            <span class="planet-tag">G-type Star</span>
+            <span class="planet-tag">Plasma</span>
+            <span class="planet-tag">99.86% Mass</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── MOON ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/moon.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">01</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Moon</h2>
+              <span class="planet-type">Natural Satellite</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            Earth's only natural satellite and the fifth largest moon in the solar system.
+            The Moon's gravitational pull drives Earth's tides and stabilizes our planet's
+            axial tilt. Its cratered surface is a record of billions of years of impacts.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Dist. from Earth</p>
+              <p class="stat-value">384,400 km</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">27.3 days</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">3,474 km</p>
+            </div>
+          </div>
+          <div class="planet-tags">
+            <span class="planet-tag">Rocky</span>
+            <span class="planet-tag">Tidally Locked</span>
+            <span class="planet-tag">No Atmosphere</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── MERCURY ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/1-mercury.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">02</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Mercury</h2>
+              <span class="planet-type">Terrestrial</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            The smallest planet and closest to the Sun. Mercury has virtually no atmosphere,
+            resulting in extreme temperature swings — scorching days and freezing nights.
+            Its surface is heavily cratered, resembling our Moon.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">0.39 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">88 days</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">4,879 km</p>
+            </div>
+
+            <div class="stat planet-age-stat" data-body="mercury">
+              <p class="stat-label">Your Age</p>
+              <p class="stat-value" data-age-value></p>
+            </div>
+
+            <div class="stat planet-rev-stat" data-body="mercury">
+              <p class="stat-label">Revolutions</p>
+              <p class="stat-value" data-rev-value></p>
+            </div>
+
+            <div class="stat planet-period-stat" data-body="mercury">
+              <p class="stat-label">Orbital Period (Earth yrs)</p>
+              <p class="stat-value" data-period-value></p>
+            </div>
+          </div>
+
+          <div class="planet-tags">
+            <span class="planet-tag">Rocky</span>
+            <span class="planet-tag">No Moons</span>
+            <span class="planet-tag">No Rings</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── VENUS ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/2-venus.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">03</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Venus</h2>
+              <span class="planet-type">Terrestrial</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            Often called Earth's twin due to its similar size, Venus is wrapped in a thick,
+            toxic atmosphere of carbon dioxide that traps heat — making it the hottest planet
+            in the solar system at around 465 °C on average.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">0.72 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">225 days</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">12,104 km</p>
+            </div>
+
+            <div class="stat planet-age-stat" data-body="venus">
+              <p class="stat-label">Your Age</p>
+              <p class="stat-value" data-age-value></p>
+            </div>
+
+            <div class="stat planet-rev-stat" data-body="venus">
+              <p class="stat-label">Revolutions</p>
+              <p class="stat-value" data-rev-value></p>
+            </div>
+
+            <div class="stat planet-period-stat" data-body="venus">
+              <p class="stat-label">Orbital Period (Earth yrs)</p>
+              <p class="stat-value" data-period-value></p>
+            </div>
+          </div>
+          <div class="planet-tags">
+            <span class="planet-tag">Rocky</span>
+            <span class="planet-tag">No Moons</span>
+            <span class="planet-tag">Retrograde</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── EARTH ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/3-earth.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">04</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Earth</h2>
+              <span class="planet-type">Terrestrial</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            Our home. The only known planet to harbor life, Earth is distinguished by liquid water
+            on its surface, a protective magnetosphere, and an oxygen-rich atmosphere that sustains
+            a rich biosphere across land, sea, and sky.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">1.00 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">365.25 days</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">12,742 km</p>
+            </div>
+          </div>
+
+          <div class="planet-tags">
+            <span class="planet-tag">Rocky</span>
+            <span class="planet-tag">1 Moon</span>
+            <span class="planet-tag">Habitable</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── MARS ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/4-mars.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">05</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Mars</h2>
+              <span class="planet-type">Terrestrial</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            The Red Planet owes its color to iron oxide on its surface. Mars hosts Olympus Mons —
+            the tallest volcano in the solar system — and Valles Marineris, a canyon system that
+            stretches over 4,000 km.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">1.52 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">687 days</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">6,779 km</p>
+            </div>
+            
+            <div class="stat planet-age-stat" data-body="mars">
+              <p class="stat-label">Your Age</p>
+              <p class="stat-value" data-age-value></p>
+            </div>
+
+            <div class="stat planet-rev-stat" data-body="mars">
+              <p class="stat-label">Revolutions</p>
+              <p class="stat-value" data-rev-value></p>
+            </div>
+
+            <div class="stat planet-period-stat" data-body="mars">
+              <p class="stat-label">Orbital Period (Earth yrs)</p>
+              <p class="stat-value" data-period-value></p>
+            </div>
+          </div>
+
+          <div class="planet-tags">
+            <span class="planet-tag">Rocky</span>
+            <span class="planet-tag">2 Moons</span>
+            <span class="planet-tag">Thin Atm.</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── JUPITER ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/5-jupiter.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">06</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Jupiter</h2>
+              <span class="planet-type">Gas Giant</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            The largest planet in the solar system — more than twice as massive as all other planets
+            combined. Jupiter's Great Red Spot is a persistent storm larger than Earth that has raged
+            for centuries.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">5.20 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">11.9 years</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">139,820 km</p>
+            </div>
+            
+            <div class="stat planet-age-stat" data-body="jupiter">
+              <p class="stat-label">Your Age</p>
+              <p class="stat-value" data-age-value></p>
+            </div>
+
+            <div class="stat planet-rev-stat" data-body="jupiter">
+              <p class="stat-label">Revolutions</p>
+              <p class="stat-value" data-rev-value></p>
+            </div>
+
+            <div class="stat planet-period-stat" data-body="jupiter">
+              <p class="stat-label">Orbital Period (Earth yrs)</p>
+              <p class="stat-value" data-period-value></p>
+            </div>
+          </div>
+
+          <div class="planet-tags">
+            <span class="planet-tag">Gas Giant</span>
+            <span class="planet-tag">95 Moons</span>
+            <span class="planet-tag">Faint Rings</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── SATURN ── -->
+      <article class="planet-entry">
+        <div class="planet-visual has-ring" style="--planet-color: #d4b483; --planet-glow: rgba(212,180,131,0.18);">
+          <div class="planet-visual-inner"></div>
+          <span class="planet-num">07</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Saturn</h2>
+              <span class="planet-type">Gas Giant</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            Instantly recognizable by its stunning ring system composed of ice, rock, and dust.
+            Saturn is the least dense planet — it would float on water. Its moon Titan has a thick
+            atmosphere and lakes of liquid methane.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">9.58 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">29.5 years</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">116,460 km</p>
+            </div>
+            
+            <div class="stat planet-age-stat" data-body="saturn">
+              <p class="stat-label">Your Age</p>
+              <p class="stat-value" data-age-value></p>
+            </div>
+
+            <div class="stat planet-rev-stat" data-body="saturn">
+              <p class="stat-label">Revolutions</p>
+              <p class="stat-value" data-rev-value></p>
+            </div>
+
+            <div class="stat planet-period-stat" data-body="saturn">
+              <p class="stat-label">Orbital Period (Earth yrs)</p>
+              <p class="stat-value" data-period-value></p>
+            </div>
+          </div>
+
+          <div class="planet-tags">
+            <span class="planet-tag">Gas Giant</span>
+            <span class="planet-tag">146 Moons</span>
+            <span class="planet-tag">Ring System</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── URANUS ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/7-uranus.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">08</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Uranus</h2>
+              <span class="planet-type">Ice Giant</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            Uranus rotates on its side with an axial tilt of 98° — likely the result of a massive
+            collision long ago. Its pale cyan color comes from methane absorbing red light. It is
+            the coldest planetary atmosphere in the solar system.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">19.2 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">84 years</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">50,724 km</p>
+            </div>
+            
+            <div class="stat planet-age-stat" data-body="uranus">
+              <p class="stat-label">Your Age</p>
+              <p class="stat-value" data-age-value></p>
+            </div>
+
+            <div class="stat planet-rev-stat" data-body="uranus">
+              <p class="stat-label">Revolutions</p>
+              <p class="stat-value" data-rev-value></p>
+            </div>
+
+            <div class="stat planet-period-stat" data-body="uranus">
+              <p class="stat-label">Orbital Period (Earth yrs)</p>
+              <p class="stat-value" data-period-value></p>
+            </div>
+          </div>
+
+          <div class="planet-tags">
+            <span class="planet-tag">Ice Giant</span>
+            <span class="planet-tag">28 Moons</span>
+            <span class="planet-tag">Tilted Axis</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── NEPTUNE ── -->
+      <article class="planet-entry">
+        <div class="planet-visual" style="--planet-color: #3f60d4; --planet-glow: rgba(63,96,212,0.2);">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/8-neptune.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">09</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Neptune</h2>
+              <span class="planet-type">Ice Giant</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            The farthest planet from the Sun, Neptune has the strongest winds in the solar system —
+            reaching speeds of over 2,100 km/h. Its largest moon, Triton, orbits in the opposite
+            direction of Neptune's rotation, suggesting it was captured.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">30.1 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">164.8 years</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">49,244 km</p>
+            </div>
+            
+            <div class="stat planet-age-stat" data-body="neptune">
+              <p class="stat-label">Your Age</p>
+              <p class="stat-value" data-age-value></p>
+            </div>
+
+            <div class="stat planet-rev-stat" data-body="neptune">
+              <p class="stat-label">Revolutions</p>
+              <p class="stat-value" data-rev-value></p>
+            </div>
+
+            <div class="stat planet-period-stat" data-body="neptune">
+              <p class="stat-label">Orbital Period (Earth yrs)</p>
+              <p class="stat-value" data-period-value></p>
+            </div>
+          </div>
+
+          <div class="planet-tags">
+            <span class="planet-tag">Ice Giant</span>
+            <span class="planet-tag">16 Moons</span>
+            <span class="planet-tag">Strongest Winds</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── PLUTO ── -->
+      <article class="planet-entry">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../assets/video/9-pluto.mp4" type="video/mp4">
+          </video>
+          <span class="planet-num">10</span>
+        </div>
+        <div class="planet-details">
+          <div>
+            <div class="planet-header">
+              <h2 class="planet-name">Pluto</h2>
+              <span class="planet-type">Dwarf Planet</span>
+            </div>
+          </div>
+          <p class="planet-description">
+            Once considered the ninth planet, Pluto was reclassified as a dwarf planet in 2006.
+            It resides in the Kuiper Belt and has a heart-shaped nitrogen ice plain — Tombaugh Regio —
+            that stretches over 1,600 km across its surface.
+          </p>
+          <div class="planet-stats">
+            <div class="stat">
+              <p class="stat-label">Distance from Sun</p>
+              <p class="stat-value">39.5 AU</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Orbital Period</p>
+              <p class="stat-value">248 years</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Diameter</p>
+              <p class="stat-value">2,377 km</p>
+            </div>
+            
+            <div class="stat planet-age-stat" data-body="pluto">
+              <p class="stat-label">Your Age</p>
+              <p class="stat-value" data-age-value></p>
+            </div>
+
+            <div class="stat planet-rev-stat" data-body="pluto">
+              <p class="stat-label">Revolutions</p>
+              <p class="stat-value" data-rev-value></p>
+            </div>
+
+            <div class="stat planet-period-stat" data-body="pluto">
+              <p class="stat-label">Orbital Period (Earth yrs)</p>
+              <p class="stat-value" data-period-value></p>
+            </div>
+          </div>
+
+          <div class="planet-tags">
+            <span class="planet-tag">Dwarf Planet</span>
+            <span class="planet-tag">5 Moons</span>
+            <span class="planet-tag">Kuiper Belt</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── ADD SLOT ── -->
+      <div class="add-planet">
+        <span class="add-planet-icon">＋</span>
+        Add a new entry
+      </div>
+
+    </section>
+  </main>
+
+  <script src="../assets/js/navbar.js"></script>
+
+  <script>
+    // Orbital periods in Earth years
+    const ORBITAL_PERIODS = {
+      moon:    0.0747945, // 27.3 days / 365.25
+      mercury: 0.2408,    // 88 days
+      venus:   0.6152,    // 225 days
+      mars:    1.8809,    // 687 days
+      jupiter: 11.862,
+      saturn:  29.457,
+      uranus:  84.011,
+      neptune: 164.8,
+      pluto:   247.94
+    };
+
+    const input = document.getElementById('age-input');
+    const badge = document.getElementById('calc-badge');
+
+    const ageStats = document.querySelectorAll('.planet-age-stat');
+    const revStats = document.querySelectorAll('.planet-rev-stat');
+    const periodStats = document.querySelectorAll('.planet-period-stat');
+
+    function format(num) {
+      if (num < 0.01) return '< 0.01';
+      if (num < 1) return num.toFixed(2);
+      if (num >= 1000) return num.toLocaleString('en-US', { maximumFractionDigits: 1 });
+      return num.toFixed(2);
+    }
+
+    function updateAges() {
+      const earthAge = parseFloat(input.value);
+
+      if (!input.value || isNaN(earthAge) || earthAge <= 0) {
+        [...ageStats, ...revStats, ...periodStats].forEach(el => el.classList.remove('visible'));
+        badge.classList.remove('visible');
+        return;
+      }
+
+      badge.classList.add('visible');
+
+      Object.keys(ORBITAL_PERIODS).forEach(body => {
+        const period = ORBITAL_PERIODS[body];
+
+        const planetAge = earthAge / period;
+        const revolutions = earthAge / period;
+
+        // AGE
+        const ageEl = document.querySelector(`.planet-age-stat[data-body="${body}"]`);
+        if (ageEl) {
+          ageEl.querySelector('[data-age-value]').textContent = format(planetAge) + ' yrs';
+          ageEl.classList.add('visible');
+        }
+
+        // REVOLUTIONS
+        const revEl = document.querySelector(`.planet-rev-stat[data-body="${body}"]`);
+        if (revEl) {
+          revEl.querySelector('[data-rev-value]').textContent = format(revolutions) + ' orbits';
+          revEl.classList.add('visible');
+        }
+
+        // ORBITAL PERIOD
+        const periodEl = document.querySelector(`.planet-period-stat[data-body="${body}"]`);
+        if (periodEl) {
+          periodEl.querySelector('[data-period-value]').textContent = period.toFixed(3) + ' yrs';
+          periodEl.classList.add('visible');
+        }
+      });
+    }
+
+    input.addEventListener('input', updateAges);
+  </script>
+
+</body>
+</html>
+
+
+<!--
+const isRoot = /\/[^/]+mma-lab-acts\/?(?:index\.html)?$/.test(path);
+const base   = isRoot ? "./" : "../";
+
+<a class="nav-logo" href="${base}index.html">
+  <img
+    src="${base}/assets/img/sun.png" width="40"
+    alt="Site logo"
+    class="nav-logo-img"/>
+</a>
+-->

@@ -46,14 +46,17 @@
 
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.25rem;
     }
 
     .project-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 6px;
-      padding: 1.75rem;
+      padding: 3.5rem;
       transition: border-color 0.2s, background 0.2s;
       cursor: default;
     }
@@ -102,23 +105,26 @@
 
   <main>
     <section class="page">
-      <p class="page-label">Selected work</p>
+      <p class="page-label">Work Collections</p>
       <h1>Projects</h1>
       <div class="projects-grid">
-        <div class="project-card">
+        <a href="solar-system/index.html" class="project-card">
           <p class="project-num">01</p>
           <h2 class="project-title">Solar System</h2>
-          <p class="project-desc">A full visual language for a sustainable fashion label — logotype, color, and motion guidelines.</p>
+          <p class="project-desc">A compilation of 3D models and visualizations of the solar system.</p>
           <span class="project-tag">Rendering</span>
+          <span class="project-tag">3D Modeling</span>
           <span class="project-tag">Coding</span>
-        </div>
-        <div class="project-card">
+        </a>
+        
+        <a href="rotoscope.html" class="project-card">
           <p class="project-num">02</p>
           <h2 class="project-title">Rotoscope</h2>
-          <p class="project-desc">Improved checkout conversion by 31% through focused UX research and iterative prototyping.</p>
+          <p class="project-desc">A collection of rotoscoping processes showcasing the art of frame-by-frame animation.</p>
           <span class="project-tag">Rotoscoping</span>
           <span class="project-tag">Rendering</span>
-        </div>
+          <span class="project-tag">Animation</span>
+        </a>
         <!--<div class="project-card">
           <p class="project-num">03</p>
           <h2 class="project-title">Interactive Data Dashboard</h2>
