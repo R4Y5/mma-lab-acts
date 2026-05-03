@@ -1,14 +1,12 @@
 (function () {
   /* ── Detect if we're at the repo root or one level deep ── */
-  const path   = window.location.pathname;
-  const isRoot = /\/[^/]+mma-lab-acts\/?(?:index\.html)?$/.test(path);
-  const base   = isRoot ? "./" : "../";
+  const base = "/mma-lab-acts/";
 
   /* ── Nav links config ── */
   const links = [
-    { href: `${base}index.html`,          label: "Home"     },
-    { href: `${base}projects/index.html`, label: "Projects" },
-    { href: `${base}about/index.html`,    label: "About"    },
+    { href: `${base}`,                   label: "Home"     },
+    { href: `${base}projects/`,          label: "Projects" },
+    { href: `${base}about/`,             label: "About"    },
   ];
 
   /* ── Determine active link by current path ── */
@@ -42,7 +40,7 @@
 
       <a class="nav-logo" href="${base}index.html">
         <img
-          src="${base}/assets/img/sun.png" width="40"
+          src="${base}assets/img/sun.png" width="40"
           alt="Site logo"
           class="nav-logo-img"/>
       </a>
