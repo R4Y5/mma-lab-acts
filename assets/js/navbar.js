@@ -1,10 +1,8 @@
 (function () {
   /* ── Detect if we're at the repo root or one level deep ── */
   const path   = window.location.pathname;
-  const depth = window.location.pathname.split("/").length - 2;
-
-  // generate correct "../" based on depth
-  const base = depth === 0 ? "./" : "../".repeat(depth);
+  const isRoot = /\/[^/]+mma-lab-acts\/?(?:index\.html)?$/.test(path);
+  const base   = isRoot ? "./" : "../";
 
   /* ── Nav links config ── */
   const links = [
@@ -44,11 +42,9 @@
 
       <a class="nav-logo" href="${base}index.html">
         <img
-          src="${base}assets/img/sun.png"
-          width="40"
+          src="${base}/assets/img/sun.png" width="40"
           alt="Site logo"
-          class="nav-logo-img"
-        />
+          class="nav-logo-img"/>
       </a>
 
       <ul class="nav-links">
