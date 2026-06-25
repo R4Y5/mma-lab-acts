@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About — ITCI231</title>
+  <title>Rotoscope — ITCI231</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
 
   <link rel="icon" href="../assets/img/sun.png" />
   <link rel="stylesheet" href="../assets/css/navbar.css" />
@@ -15,105 +15,889 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --accent: #e8ff6b;
+      --bg: #0d0d0d;
+      --text: #e0e0d8;
+      --muted: rgba(255,255,255,0.38);
+      --border: rgba(255,255,255,0.07);
+      --accent-border: rgba(232,255,107,0.28);
+      --accent-bg: rgba(232,255,107,0.04);
+    }
+
     body {
-      background: #0d0d0d;
-      color: #e0e0d8;
+      background: var(--bg);
+      color: var(--text);
       font-family: "DM Mono", monospace;
       min-height: 100vh;
     }
 
-    .page {
-      max-width: 760px;
+    /* ── PAGE HEADER ── */
+    .page-header {
+      max-width: 900px;
       margin: 0 auto;
-      padding: 5rem 2rem;
+      padding: 5rem 2rem 3rem;
     }
+
+    .breadcrumb {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--accent); }
+
+    .breadcrumb span { margin: 0 0.5rem; opacity: 0.4; }
 
     .page-label {
       font-size: 0.68rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: #e8ff6b;
+      color: var(--accent);
       margin-bottom: 1.25rem;
     }
 
-    h1 {
+    .page-header h1 {
       font-family: "DM Serif Display", serif;
-      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-size: clamp(2rem, 5vw, 3.25rem);
       color: #fff;
-      line-height: 1.15;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .page-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 520px;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── MAIN STAGE ── */
+    .stage-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stage-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .stage-wrapper {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: border-color 0.25s;
+      background: #111;
+    }
+
+    .stage-wrapper:hover {
+      border-color: var(--accent-border);
+    }
+
+    .stage-media {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      background: #0a0a0a;
+      display: block;
+    }
+
+    .stage-media.is-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.75rem;
+      aspect-ratio: 16 / 9;
+      background: #0a0a0a;
+    }
+
+    .stage-empty-icon {
+      font-size: 2.5rem;
+      opacity: 0.12;
+    }
+
+    .stage-empty-text {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.12);
+    }
+
+    .stage-footer {
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .stage-title {
+      font-family: "DM Serif Display", serif;
+      font-size: 1.35rem;
+      color: #fff;
+    }
+
+    .stage-title.placeholder {
+      color: rgba(255,255,255,0.18);
+      font-style: italic;
+    }
+
+    .stage-meta {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stage-badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      background: var(--accent-bg);
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+
+    /* ── PROGRESS GRID ── */
+    .progress-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    .progress-section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
       margin-bottom: 2.5rem;
     }
 
-    p {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.5);
-      line-height: 1.8;
+    /* ── ROTO ENTRY ── */
+    .roto-entry {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
       margin-bottom: 1.25rem;
+      overflow: hidden;
+      transition: border-color 0.25s;
+      cursor: pointer;
     }
 
-    .divider {
-      width: 40px;
-      height: 1.5px;
-      background: #e8ff6b;
-      margin: 2.5rem 0;
+    .roto-entry:hover {
+      border-color: var(--accent-border);
     }
 
-    .about-layout {
+    .roto-entry.active {
+      border-color: var(--accent-border);
+      background: var(--accent-bg);
+    }
+
+    .roto-media-wrap {
+      position: relative;
+      min-height: 200px;
+      background: #111;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
       display: flex;
-      align-items: flex-start;   /* aligns text and image at the top */
-      gap: 2rem;                 /* spacing between text and image */
-    }
-
-    .about-text {
-      flex: 2;                   /* text takes more space */
-    }
-
-    .about-image {
-      flex: 1;                   /* image takes less space */
-      display: flex;
+      align-items: center;
       justify-content: center;
     }
 
-    .profile-img {
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;        /* circular portrait */
+    .roto-thumb {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      border: 2px solid #e8ff6b; /* accent border */
+      position: absolute;
+      inset: 0;
+      display: block;
+      transition: transform 0.4s ease;
     }
+
+    .roto-entry:hover .roto-thumb {
+      transform: scale(1.05);
+    }
+
+    /* Placeholder visual when no image */
+    .roto-thumb-placeholder {
+      width: 80px;
+      height: 80px;
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      opacity: 0.2;
+    }
+
+    .roto-num {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.15);
+    }
+
+    /* "Play in stage" indicator on hover */
+    .roto-play-hint {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(232,255,107,0.06);
+      opacity: 0;
+      transition: opacity 0.25s;
+      pointer-events: none;
+    }
+
+    .roto-entry:hover .roto-play-hint {
+      opacity: 1;
+    }
+
+    .roto-play-hint span {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      background: rgba(0,0,0,0.55);
+      padding: 4px 10px;
+      border-radius: 3px;
+    }
+
+    .roto-details {
+      padding: 1.75rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .roto-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .roto-name {
+      font-family: "DM Serif Display", serif;
+      font-size: 1.4rem;
+      color: #fff;
+    }
+
+    .roto-type {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .roto-description {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .roto-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    .stat {
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+
+    .stat-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-value {
+      font-size: 0.78rem;
+      color: #fff;
+    }
+
+    .roto-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .roto-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    /* active state overrides */
+    .roto-entry.active .roto-name { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .roto-entry {
+        grid-template-columns: 1fr;
+      }
+
+      .roto-media-wrap {
+        min-height: 160px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .roto-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stage-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .stage-wrapper { animation: fadeIn 0.35s ease; }
   </style>
 </head>
 <body>
 
-  <!-- ① Navbar placeholder -->
   <div id="navbar"></div>
 
   <main>
-    <section class="page about-layout">
-      <div class="about-text">
-        <p class="page-label">About me</p>
-        <h1>Behind the Frames.</h1>
-        <p>
-          Hey there!
-        </p>
-        <p>
-          This website was created for educational purposes only and will serve as a portfolio 
-          featuring the projects I made for Multimedia and Authoring Laboratory class.
-        </p>
-        <div class="divider"></div>
-        <p>John Raymund M. Turallo <br>BSIT-NS-2A-T</p>
-      </div>
 
-      <!-- Profile image on the right -->
-      <div class="about-image">
-        <img src="../assets/img/ray.png" 
-            alt="ray" 
-            class="profile-img" />
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+      <nav class="breadcrumb">
+        <a href="../index.html">Home</a>
+        <span>/</span>
+        Rotoscope
+      </nav>
+      <p class="page-label">02 — Frame-by-Frame · Motion · Animation</p>
+      <h1>Rotoscope<br><em>Progress</em></h1>
+      <p class="page-desc">
+        A documentation of each rotoscoping pass — from initial trace to final composite.
+        Click any entry below to load it into the main stage.
+      </p>
+    </header>
+
+    <div class="section-divider"></div>
+
+    <!-- MAIN STAGE -->
+    <section class="stage-section">
+      <p class="stage-label">Stage — Final Output</p>
+
+      <div class="stage-wrapper" id="stage-wrapper">
+        <!-- Populated by JS; shows placeholder until an entry is selected -->
+        <div class="stage-media is-empty" id="stage-empty">
+          <span class="stage-empty-icon">▷</span>
+          <span class="stage-empty-text">Select an entry below to preview</span>
+        </div>
+
+        <!-- Video element (hidden until loaded) -->
+        <video
+          class="stage-media"
+          id="stage-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          style="display:none;"
+        ></video>
+
+        <!-- Image element (hidden until loaded) -->
+        <img
+          class="stage-media"
+          id="stage-image"
+          alt="Rotoscope output"
+          style="display:none;"
+        />
+
+        <div class="stage-footer">
+          <div>
+            <p class="stage-title placeholder" id="stage-title">No entry selected</p>
+            <p class="stage-meta" id="stage-meta">—</p>
+          </div>
+          <span class="stage-badge" id="stage-badge" style="display:none;">▶ Now Showing</span>
+        </div>
       </div>
+    </section>
+
+    <!-- PROGRESS ENTRIES -->
+    <section class="progress-section">
+      <p class="progress-section-label">Progress — 4 passes · Frame-by-frame traces</p>
+
+      <!-- ── ENTRY 01 ── -->
+      <article
+        class="roto-entry"
+        data-title="Pass 01 — Rough Trace"
+        data-type="video"
+        data-src="../assets/video/roto-pass-01.mp4"
+        data-frames="120"
+        data-tool="Adobe Animate"
+        data-duration="5s"
+        data-meta="Initial rough outline · 24 fps"
+      >
+        <div class="roto-media-wrap">
+          <!-- Replace src with your actual thumbnail/video -->
+          <div class="roto-thumb-placeholder">✏</div>
+          <div class="roto-play-hint"><span>View in Stage</span></div>
+          <span class="roto-num">01</span>
+        </div>
+        <div class="roto-details">
+          <div>
+            <div class="roto-header">
+              <h2 class="roto-name">Pass 01</h2>
+              <span class="roto-type">Rough Trace</span>
+            </div>
+          </div>
+          <p class="roto-description">
+            The first pass establishing the primary silhouette. Loose, gestural lines
+            traced frame by frame over the source footage to capture motion and timing
+            before refining detail.
+          </p>
+          <div class="roto-stats">
+            <div class="stat">
+              <p class="stat-label">Frames</p>
+              <p class="stat-value">120</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Tool</p>
+              <p class="stat-value">Animate</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Duration</p>
+              <p class="stat-value">5 sec</p>
+            </div>
+          </div>
+          <div class="roto-tags">
+            <span class="roto-tag">Silhouette</span>
+            <span class="roto-tag">Gestural</span>
+            <span class="roto-tag">24 fps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── ENTRY 02 ── -->
+      <article
+        class="roto-entry"
+        data-title="Pass 02 — Clean Lines"
+        data-type="video"
+        data-src="../assets/video/roto-pass-02.mp4"
+        data-frames="120"
+        data-tool="Adobe Animate"
+        data-duration="5s"
+        data-meta="Refined outlines · 24 fps"
+      >
+        <div class="roto-media-wrap">
+          <div class="roto-thumb-placeholder">✐</div>
+          <div class="roto-play-hint"><span>View in Stage</span></div>
+          <span class="roto-num">02</span>
+        </div>
+        <div class="roto-details">
+          <div>
+            <div class="roto-header">
+              <h2 class="roto-name">Pass 02</h2>
+              <span class="roto-type">Clean Lines</span>
+            </div>
+          </div>
+          <p class="roto-description">
+            Outlines refined over the rough trace. Unnecessary strokes removed,
+            line weight normalized, and key joints anchored for consistent
+            motion across the sequence.
+          </p>
+          <div class="roto-stats">
+            <div class="stat">
+              <p class="stat-label">Frames</p>
+              <p class="stat-value">120</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Tool</p>
+              <p class="stat-value">Animate</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Duration</p>
+              <p class="stat-value">5 sec</p>
+            </div>
+          </div>
+          <div class="roto-tags">
+            <span class="roto-tag">Line Art</span>
+            <span class="roto-tag">Cleaned</span>
+            <span class="roto-tag">24 fps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── ENTRY 03 ── -->
+      <article
+        class="roto-entry"
+        data-title="Pass 03 — Color Fill"
+        data-type="video"
+        data-src="../assets/video/roto-pass-03.mp4"
+        data-frames="120"
+        data-tool="Adobe Animate"
+        data-duration="5s"
+        data-meta="Flat color applied · 24 fps"
+      >
+        <div class="roto-media-wrap">
+          <div class="roto-thumb-placeholder">🎨</div>
+          <div class="roto-play-hint"><span>View in Stage</span></div>
+          <span class="roto-num">03</span>
+        </div>
+        <div class="roto-details">
+          <div>
+            <div class="roto-header">
+              <h2 class="roto-name">Pass 03</h2>
+              <span class="roto-type">Color Fill</span>
+            </div>
+          </div>
+          <p class="roto-description">
+            Flat color zones applied within the clean outlines. A limited palette
+            keeps the read clear before shading and detail are introduced
+            in later passes.
+          </p>
+          <div class="roto-stats">
+            <div class="stat">
+              <p class="stat-label">Frames</p>
+              <p class="stat-value">120</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Tool</p>
+              <p class="stat-value">Animate</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Duration</p>
+              <p class="stat-value">5 sec</p>
+            </div>
+          </div>
+          <div class="roto-tags">
+            <span class="roto-tag">Flat Color</span>
+            <span class="roto-tag">Palette</span>
+            <span class="roto-tag">24 fps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── ENTRY 03 ── -->
+      <article
+        class="roto-entry"
+        data-title="Pass 03 — Color Fill"
+        data-type="video"
+        data-src="../assets/video/roto-pass-03.mp4"
+        data-frames="120"
+        data-tool="Adobe Animate"
+        data-duration="5s"
+        data-meta="Flat color applied · 24 fps"
+      >
+        <div class="roto-media-wrap">
+          <div class="roto-thumb-placeholder">🎨</div>
+          <div class="roto-play-hint"><span>View in Stage</span></div>
+          <span class="roto-num">03</span>
+        </div>
+        <div class="roto-details">
+          <div>
+            <div class="roto-header">
+              <h2 class="roto-name">Pass 04</h2>
+              <span class="roto-type">Color Fill</span>
+            </div>
+          </div>
+          <p class="roto-description">
+            Flat color zones applied within the clean outlines. A limited palette
+            keeps the read clear before shading and detail are introduced
+            in later passes.
+          </p>
+          <div class="roto-stats">
+            <div class="stat">
+              <p class="stat-label">Frames</p>
+              <p class="stat-value">120</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Tool</p>
+              <p class="stat-value">Animate</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Duration</p>
+              <p class="stat-value">5 sec</p>
+            </div>
+          </div>
+          <div class="roto-tags">
+            <span class="roto-tag">Flat Color</span>
+            <span class="roto-tag">Palette</span>
+            <span class="roto-tag">24 fps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── ENTRY 03 ── -->
+      <article
+        class="roto-entry"
+        data-title="Pass 03 — Color Fill"
+        data-type="video"
+        data-src="../assets/video/roto-pass-03.mp4"
+        data-frames="120"
+        data-tool="Adobe Animate"
+        data-duration="5s"
+        data-meta="Flat color applied · 24 fps"
+      >
+        <div class="roto-media-wrap">
+          <div class="roto-thumb-placeholder">🎨</div>
+          <div class="roto-play-hint"><span>View in Stage</span></div>
+          <span class="roto-num">03</span>
+        </div>
+        <div class="roto-details">
+          <div>
+            <div class="roto-header">
+              <h2 class="roto-name">Pass 05</h2>
+              <span class="roto-type">Color Fill</span>
+            </div>
+          </div>
+          <p class="roto-description">
+            Flat color zones applied within the clean outlines. A limited palette
+            keeps the read clear before shading and detail are introduced
+            in later passes.
+          </p>
+          <div class="roto-stats">
+            <div class="stat">
+              <p class="stat-label">Frames</p>
+              <p class="stat-value">120</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Tool</p>
+              <p class="stat-value">Animate</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Duration</p>
+              <p class="stat-value">5 sec</p>
+            </div>
+          </div>
+          <div class="roto-tags">
+            <span class="roto-tag">Flat Color</span>
+            <span class="roto-tag">Palette</span>
+            <span class="roto-tag">24 fps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── ENTRY 03 ── -->
+      <article
+        class="roto-entry"
+        data-title="Pass 03 — Color Fill"
+        data-type="video"
+        data-src="../assets/video/roto-pass-03.mp4"
+        data-frames="120"
+        data-tool="Adobe Animate"
+        data-duration="5s"
+        data-meta="Flat color applied · 24 fps"
+      >
+        <div class="roto-media-wrap">
+          <div class="roto-thumb-placeholder">🎨</div>
+          <div class="roto-play-hint"><span>View in Stage</span></div>
+          <span class="roto-num">03</span>
+        </div>
+        <div class="roto-details">
+          <div>
+            <div class="roto-header">
+              <h2 class="roto-name">Pass 06</h2>
+              <span class="roto-type">Color Fill</span>
+            </div>
+          </div>
+          <p class="roto-description">
+            Flat color zones applied within the clean outlines. A limited palette
+            keeps the read clear before shading and detail are introduced
+            in later passes.
+          </p>
+          <div class="roto-stats">
+            <div class="stat">
+              <p class="stat-label">Frames</p>
+              <p class="stat-value">120</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Tool</p>
+              <p class="stat-value">Animate</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Duration</p>
+              <p class="stat-value">5 sec</p>
+            </div>
+          </div>
+          <div class="roto-tags">
+            <span class="roto-tag">Flat Color</span>
+            <span class="roto-tag">Palette</span>
+            <span class="roto-tag">24 fps</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── ENTRY 04 — FINAL ── -->
+      <article
+        class="roto-entry"
+        data-title="Pass 04 — Final Composite"
+        data-type="video"
+        data-src="../assets/video/roto-final.mp4"
+        data-frames="120"
+        data-tool="After Effects"
+        data-duration="5s"
+        data-meta="Final output · composited · 24 fps"
+      >
+        <div class="roto-media-wrap">
+          <div class="roto-thumb-placeholder">★</div>
+          <div class="roto-play-hint"><span>View in Stage</span></div>
+          <span class="roto-num">04</span>
+        </div>
+        <div class="roto-details">
+          <div>
+            <div class="roto-header">
+              <h2 class="roto-name">Pass 04</h2>
+              <span class="roto-type">Final</span>
+            </div>
+          </div>
+          <p class="roto-description">
+            The completed rotoscope composite — shading, color correction, and background
+            layered against the cleaned animation. This is the deliverable output for the
+            ITCI231 submission.
+          </p>
+          <div class="roto-stats">
+            <div class="stat">
+              <p class="stat-label">Frames</p>
+              <p class="stat-value">120</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Tool</p>
+              <p class="stat-value">After Effects</p>
+            </div>
+            <div class="stat">
+              <p class="stat-label">Duration</p>
+              <p class="stat-value">5 sec</p>
+            </div>
+          </div>
+          <div class="roto-tags">
+            <span class="roto-tag">Composite</span>
+            <span class="roto-tag">Final</span>
+            <span class="roto-tag">Shaded</span>
+          </div>
+        </div>
+      </article>
+
     </section>
   </main>
 
-  <!-- ② Shared navbar script -->
   <script src="../assets/js/navbar.js"></script>
+
+  <script>
+    const entries = document.querySelectorAll('.roto-entry');
+
+    const stageEmpty  = document.getElementById('stage-empty');
+    const stageVideo  = document.getElementById('stage-video');
+    const stageImage  = document.getElementById('stage-image');
+    const stageTitle  = document.getElementById('stage-title');
+    const stageMeta   = document.getElementById('stage-meta');
+    const stageBadge  = document.getElementById('stage-badge');
+
+    let activeEntry = null;
+
+    function loadIntoStage(entry) {
+      // Deactivate old
+      if (activeEntry) activeEntry.classList.remove('active');
+      activeEntry = entry;
+      entry.classList.add('active');
+
+      const type  = entry.dataset.type;   // 'video' or 'image'
+      const src   = entry.dataset.src;
+      const title = entry.dataset.title;
+      const meta  = entry.dataset.meta;
+
+      // Update footer
+      stageTitle.textContent = title;
+      stageTitle.classList.remove('placeholder');
+      stageMeta.textContent  = meta;
+      stageBadge.style.display = 'inline-flex';
+
+      // Hide all, then show correct one
+      stageEmpty.style.display = 'none';
+      stageVideo.style.display = 'none';
+      stageImage.style.display = 'none';
+
+      if (type === 'video') {
+        stageVideo.src = src;
+        stageVideo.style.display = 'block';
+        stageVideo.load();
+        stageVideo.play();
+      } else {
+        stageImage.src = src;
+        stageImage.style.display = 'block';
+      }
+
+      // Smooth scroll to stage on mobile
+      if (window.innerWidth < 768) {
+        document.querySelector('.stage-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    entries.forEach(entry => {
+      entry.addEventListener('click', () => loadIntoStage(entry));
+      entry.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          loadIntoStage(entry);
+        }
+      });
+      entry.setAttribute('tabindex', '0');
+      entry.setAttribute('role', 'button');
+    });
+  </script>
+
 </body>
 </html>
