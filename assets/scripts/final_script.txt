@@ -1,0 +1,325 @@
+"""
+Solar System Orbit Animation - Blender Python Script
+------------------------------------------------------
+
+import bpy
+import math
+
+# ============================================================
+# CONFIG - EDIT THESE
+# ============================================================
+
+FPS = 24
+DURATION_SECONDS = 15
+FRAME_START = 1
+FRAME_END = FRAME_START + FPS * DURATION_SECONDS - 1  # 360 frames @ 24fps
+
+# --- REPLACE WITH YOUR OWN TEXTURE FILES ---
+SUN_TEXTURE = "//textures/sun.jpg"
+
+# fallback flat colors used only if a texture fails to load
+FALLBACK_COLORS = {
+    "Sun":     (1.0, 0.6, 0.05, 1.0),
+    "Mercury": (0.6, 0.55, 0.5, 1.0),
+    "Venus":   (0.85, 0.7, 0.4, 1.0),
+    "Earth":   (0.2, 0.4, 0.8, 1.0),
+    "Mars":    (0.75, 0.35, 0.2, 1.0),
+    "Jupiter": (0.8, 0.65, 0.45, 1.0),
+    "Saturn":  (0.85, 0.75, 0.5, 1.0),
+    "Uranus":  (0.55, 0.8, 0.85, 1.0),
+    "Neptune": (0.25, 0.35, 0.9, 1.0),
+}
+
+# orbits = how many FULL revolutions each planet makes during the
+# animation. MUST be a whole number (int) so every planet lands back
+# on its start angle at FRAME_END -> guarantees the "lined up" pose
+# on the last frame automatically.
+PLANETS = [
+    {"name": "Mercury", "orbit_radius": 4,  "size": 0.30, "orbits": 8, "texture": "//textures/mercury.jpg"},
+    {"name": "Venus",   "orbit_radius": 6,  "size": 0.45, "orbits": 6, "texture": "//textures/venus.jpg"},
+    {"name": "Earth",   "orbit_radius": 8,  "size": 0.50, "orbits": 5, "texture": "//textures/earth.jpg"},
+    {"name": "Mars",    "orbit_radius": 10, "size": 0.35, "orbits": 4, "texture": "//textures/mars.jpg"},
+    {"name": "Jupiter", "orbit_radius": 14, "size": 1.20, "orbits": 3, "texture": "//textures/jupiter.jpg"},
+    {"name": "Saturn",  "orbit_radius": 18, "size": 1.00, "orbits": 2, "texture": "//textures/saturn.jpg", "ring": "//textures/saturn_ring.png"},
+    {"name": "Uranus",  "orbit_radius": 22, "size": 0.70, "orbits": 2, "texture": "//textures/uranus.jpg"},
+    {"name": "Neptune", "orbit_radius": 26, "size": 0.65, "orbits": 1, "texture": "//textures/neptune.jpg"},
+]
+
+SUN_SIZE = 2.5
+SELF_SPIN = True          # give each planet a bit of axial spin too
+SELF_SPIN_TURNS = 3       # full self-rotations over the animation
+
+ADD_STARFIELD = True      # procedural stars in the world background
+RESOLUTION = (1920, 1080)
+
+
+# ============================================================
+# HELPERS
+# ============================================================
+
+def clear_scene():
+    # Remove objects directly via bpy.data instead of bpy.ops.object.delete()
+    # so this works reliably even when run headless / without a 3D viewport
+    # in context (a common cause of "incomplete" runs from the Text Editor).
+    for obj in list(bpy.data.objects):
+        bpy.data.objects.remove(obj, do_unlink=True)
+
+    for block_collection in (bpy.data.meshes, bpy.data.materials,
+                              bpy.data.images, bpy.data.lights,
+                              bpy.data.cameras):
+        for block in list(block_collection):
+            if block.users == 0:
+                block_collection.remove(block)
+
+
+def load_image_safe(path):
+    if not path:
+        return None
+    try:
+        return bpy.data.images.load(path, check_existing=True)
+    except Exception as e:
+        print(f"[WARNING] Could not load texture '{path}': {e}")
+        return None
+
+
+def make_material(name, texture_path, fallback_rgba, emission=False, emission_strength=3.0):
+    mat = bpy.data.materials.new(name=f"{name}_MAT")
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+    nodes.clear()
+
+    output = nodes.new(type='ShaderNodeOutputMaterial')
+    output.location = (400, 0)
+
+    image = load_image_safe(texture_path)
+
+    if emission:
+        emit = nodes.new(type='ShaderNodeEmission')
+        emit.location = (100, 0)
+        emit.inputs['Strength'].default_value = emission_strength
+        if image:
+            tex = nodes.new(type='ShaderNodeTexImage')
+            tex.location = (-200, 0)
+            tex.image = image
+            links.new(tex.outputs['Color'], emit.inputs['Color'])
+        else:
+            emit.inputs['Color'].default_value = fallback_rgba
+        links.new(emit.outputs['Emission'], output.inputs['Surface'])
+    else:
+        bsdf = nodes.new(type='ShaderNodeBsdfPrincipled')
+        bsdf.location = (100, 0)
+        if image:
+            tex = nodes.new(type='ShaderNodeTexImage')
+            tex.location = (-200, 0)
+            tex.image = image
+            links.new(tex.outputs['Color'], bsdf.inputs['Base Color'])
+        else:
+            bsdf.inputs['Base Color'].default_value = fallback_rgba
+        links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+
+    return mat
+
+
+def set_linear_fcurves(obj, data_path="rotation_euler", index=2):
+    if not obj.animation_data or not obj.animation_data.action:
+        return
+    for fcurve in obj.animation_data.action.fcurves:
+        if fcurve.data_path == data_path and fcurve.array_index == index:
+            for kp in fcurve.keyframe_points:
+                kp.interpolation = 'LINEAR'
+
+
+def create_sun():
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=SUN_SIZE, location=(0, 0, 0))
+    sun = bpy.context.active_object
+    sun.name = "Sun"
+    bpy.ops.object.shade_smooth()
+    mat = make_material("Sun", SUN_TEXTURE, FALLBACK_COLORS["Sun"], emission=True, emission_strength=4.0)
+    sun.data.materials.append(mat)
+
+    # Point light at the sun's position so planets are lit even
+    # though the sun itself uses an emission shader (no light cast by default)
+    bpy.ops.object.light_add(type='POINT', location=(0, 0, 0))
+    light = bpy.context.active_object
+    light.name = "Sun_Light"
+    light.data.energy = 5000
+    light.data.shadow_soft_size = SUN_SIZE
+    return sun
+
+
+def create_planet(cfg):
+    name = cfg["name"]
+
+    # Orbit pivot empty at the sun's location - rotating this rotates the planet around the sun
+    orbit_empty = bpy.data.objects.new(f"{name}_Orbit", None)
+    bpy.context.collection.objects.link(orbit_empty)
+    orbit_empty.location = (0, 0, 0)
+    orbit_empty.rotation_mode = 'XYZ'
+
+    # Planet mesh, offset from the pivot along +X, parented to the pivot
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=cfg["size"], location=(cfg["orbit_radius"], 0, 0))
+    planet = bpy.context.active_object
+    planet.name = name
+    bpy.ops.object.shade_smooth()
+    planet.parent = orbit_empty
+    planet.matrix_parent_inverse = orbit_empty.matrix_world.inverted()
+
+    mat = make_material(name, cfg["texture"], FALLBACK_COLORS.get(name, (0.7, 0.7, 0.7, 1.0)))
+    planet.data.materials.append(mat)
+
+    # --- Optional ring (e.g. Saturn) ---
+    if cfg.get("ring"):
+        bpy.ops.mesh.primitive_torus_add(
+            major_radius=cfg["size"] * 1.8,
+            minor_radius=cfg["size"] * 0.05,
+            location=(cfg["orbit_radius"], 0, 0),
+        )
+        ring = bpy.context.active_object
+        ring.name = f"{name}_Ring"
+        ring.scale.z = 0.05  # flatten
+        ring.parent = orbit_empty
+        ring.matrix_parent_inverse = orbit_empty.matrix_world.inverted()
+        ring_mat = make_material(f"{name}_Ring", cfg["ring"], (0.8, 0.75, 0.6, 1.0))
+        ring.data.materials.append(ring_mat)
+
+    # --- ALL planets start lined up on frame 1 (angle = 0) ---
+    orbit_empty.rotation_euler = (0, 0, 0)
+    orbit_empty.keyframe_insert(data_path="rotation_euler", index=2, frame=FRAME_START)
+
+    # --- End angle = orbits * 360 degrees -> lands exactly back on the
+    #     start alignment at FRAME_END since "orbits" is a whole number ---
+    orbit_empty.rotation_euler = (0, 0, cfg["orbits"] * 2 * math.pi)
+    orbit_empty.keyframe_insert(data_path="rotation_euler", index=2, frame=FRAME_END)
+
+    set_linear_fcurves(orbit_empty, "rotation_euler", 2)
+
+    # --- optional self spin for visual interest (does not affect alignment) ---
+    if SELF_SPIN:
+        planet.rotation_mode = 'XYZ'
+        planet.rotation_euler = (0, 0, 0)
+        planet.keyframe_insert(data_path="rotation_euler", index=2, frame=FRAME_START)
+        planet.rotation_euler = (0, 0, SELF_SPIN_TURNS * 2 * math.pi)
+        planet.keyframe_insert(data_path="rotation_euler", index=2, frame=FRAME_END)
+        set_linear_fcurves(planet, "rotation_euler", 2)
+
+    return orbit_empty, planet
+
+
+def build_starfield_world():
+    """Procedural starry background using a Noise Texture driving Emission,
+    so no external image is needed. Mimics the scattered stars in your
+    reference image."""
+    world = bpy.context.scene.world
+    if world is None:
+        world = bpy.data.worlds.new("World")
+        bpy.context.scene.world = world
+    world.use_nodes = True
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+
+    output = nodes.new(type='ShaderNodeOutputWorld')
+    output.location = (600, 0)
+
+    if ADD_STARFIELD:
+        coord = nodes.new(type='ShaderNodeTexCoord')
+        coord.location = (-800, 0)
+
+        noise = nodes.new(type='ShaderNodeTexNoise')
+        noise.location = (-600, 0)
+        noise.inputs['Scale'].default_value = 700.0
+        noise.inputs['Detail'].default_value = 0.0
+        noise.inputs['Roughness'].default_value = 0.0
+
+        # Push the noise through a sharp ColorRamp so only bright peaks
+        # survive as tiny star points instead of a smooth cloud
+        ramp = nodes.new(type='ShaderNodeValToRGB')
+        ramp.location = (-400, 0)
+        ramp.color_ramp.elements[0].position = 0.965
+        ramp.color_ramp.elements[0].color = (0, 0, 0, 1)
+        ramp.color_ramp.elements[1].position = 0.985
+        ramp.color_ramp.elements[1].color = (1, 1, 1, 1)
+
+        star_emit = nodes.new(type='ShaderNodeEmission')
+        star_emit.location = (-150, 100)
+        star_emit.inputs['Strength'].default_value = 3.0
+
+        base_bg = nodes.new(type='ShaderNodeBackground')
+        base_bg.location = (-150, -150)
+        base_bg.inputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
+        base_bg.inputs['Strength'].default_value = 0.02
+
+        mix = nodes.new(type='ShaderNodeMixShader')
+        mix.location = (200, 0)
+
+        links.new(coord.outputs['Generated'], noise.inputs['Vector'])
+        links.new(noise.outputs['Fac'], ramp.inputs['Fac'])
+        links.new(ramp.outputs['Color'], mix.inputs['Fac'])
+        links.new(base_bg.outputs['Background'], mix.inputs[1])
+        links.new(star_emit.outputs['Emission'], mix.inputs[2])
+        links.new(mix.outputs['Shader'], output.inputs['Surface'])
+    else:
+        bg = nodes.new(type='ShaderNodeBackground')
+        bg.location = (0, 0)
+        bg.inputs['Color'].default_value = (0.0, 0.0, 0.0, 1.0)
+        bg.inputs['Strength'].default_value = 0.02
+        links.new(bg.outputs['Background'], output.inputs['Surface'])
+
+
+def setup_camera():
+    """Position the camera so every planet's max orbit distance fits in frame,
+    regardless of PLANETS config changes."""
+    max_radius = max(p["orbit_radius"] for p in PLANETS)
+    distance = max_radius * 1.9
+    height = max_radius * 0.9
+
+    bpy.ops.object.camera_add(
+        location=(0, -distance, height),
+        rotation=(math.radians(60), 0, 0),
+    )
+    cam = bpy.context.active_object
+    cam.name = "Main_Camera"
+    cam.data.lens = 35
+    bpy.context.scene.camera = cam
+    return cam
+
+
+def setup_scene_settings():
+    scene = bpy.context.scene
+    scene.render.fps = FPS
+    scene.frame_start = FRAME_START
+    scene.frame_end = FRAME_END
+    scene.frame_current = FRAME_START
+    scene.render.resolution_x = RESOLUTION[0]
+    scene.render.resolution_y = RESOLUTION[1]
+
+    # Engine enum names differ across Blender versions
+    # (4.2+: 'BLENDER_EEVEE_NEXT', 4.1 and earlier: 'BLENDER_EEVEE').
+    # Try CYCLES first (best emission/glow quality), then fall back safely.
+    for engine in ('CYCLES', 'BLENDER_EEVEE_NEXT', 'BLENDER_EEVEE'):
+        try:
+            scene.render.engine = engine
+            break
+        except TypeError:
+            continue
+
+
+# ============================================================
+# BUILD
+# ============================================================
+
+def main():
+    clear_scene()
+    create_sun()
+    for cfg in PLANETS:
+        create_planet(cfg)
+    setup_camera()
+    build_starfield_world()
+    setup_scene_settings()
+    print(f"Solar system built. Animation: frame {FRAME_START} to {FRAME_END} "
+          f"({DURATION_SECONDS}s @ {FPS}fps). Planets realign on the last frame.")
+
+
+if __name__ == "__main__":
+    main()

@@ -11,6 +11,7 @@
 
   <link rel="icon" href="../assets/img/sun.png" />
   <link rel="stylesheet" href="../assets/css/navbar.css" />
+  <link rel="stylesheet" href="../assets/css/footer.css" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -94,6 +95,150 @@
       margin: 0 auto;
       padding: 0 2rem;
       border-top: 1px solid var(--border);
+    }
+
+    /* ── MAIN STAGE (YOUTUBE) ── */
+    .stage-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stage-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .stage-wrapper {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: border-color 0.25s;
+      background: #111;
+    }
+
+    .stage-wrapper:hover {
+      border-color: var(--accent-border);
+    }
+
+    .stage-media-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #0a0a0a;
+    }
+
+    .stage-media-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .stage-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .stage-empty-icon {
+      font-size: 2.5rem;
+      opacity: 0.12;
+    }
+
+    .stage-empty-text {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.12);
+    }
+
+    .stage-footer {
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .stage-title {
+      font-family: "DM Serif Display", serif;
+      font-size: 1.35rem;
+      color: #fff;
+    }
+
+    .stage-title.placeholder {
+      color: rgba(255,255,255,0.18);
+      font-style: italic;
+    }
+
+    .stage-meta {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stage-badge {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      background: var(--accent-bg);
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+
+    /* planet entries become clickable "load into stage" cards */
+    .planet-entry {
+      cursor: pointer;
+    }
+
+    .planet-entry.active {
+      border-color: var(--accent-border);
+      background: var(--accent-bg);
+    }
+
+    .planet-entry.active .planet-name {
+      color: var(--accent);
+    }
+
+    .planet-play-hint {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(232,255,107,0.06);
+      opacity: 0;
+      transition: opacity 0.25s;
+      pointer-events: none;
+    }
+
+    .planet-entry:hover .planet-play-hint {
+      opacity: 1;
+    }
+
+    .planet-play-hint span {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      background: rgba(0,0,0,0.55);
+      padding: 4px 10px;
+      border-radius: 3px;
     }
 
     /* ── AGE CALCULATOR ── */
@@ -456,6 +601,152 @@
     }
 
     .planet-yt:hover .yt-label { color: #e8ff6b; }
+
+    /* ── SOURCE CODE SECTION ── */
+    .source-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .source-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .source-wrapper {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #111;
+      transition: border-color 0.25s;
+    }
+
+    .source-wrapper:hover {
+      border-color: var(--accent-border);
+    }
+
+    .source-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .source-filename {
+      font-size: 0.72rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .source-filename::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .source-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .source-btn {
+      font-family: "DM Mono", monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 5px 11px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .source-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-bg);
+    }
+
+    .source-body {
+      position: relative;
+      max-height: 520px;
+      overflow: auto;
+    }
+
+    .source-body pre {
+      margin: 0;
+      padding: 1.5rem 1.75rem;
+    }
+
+    .source-body code {
+      font-family: "DM Mono", monospace;
+      font-size: 0.72rem;
+      line-height: 1.8;
+      color: var(--text);
+      white-space: pre;
+    }
+
+    .source-empty {
+      padding: 3rem 1.75rem;
+      text-align: center;
+      color: rgba(255,255,255,0.18);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .source-drop {
+      padding: 3rem 1.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .source-drop:hover,
+    .source-drop.dragover {
+      background: var(--accent-bg);
+    }
+
+    .source-drop-icon {
+      font-size: 1.6rem;
+      opacity: 0.25;
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .source-drop-text {
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .source-drop-sub {
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.12);
+      margin-top: 0.4rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    #source-file-input {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -475,6 +766,29 @@
     </header>
 
     <div class="section-divider"></div>
+
+    <!-- MAIN STAGE -->
+    <section class="stage-section">
+      <p class="stage-label">Stage — Now Playing</p>
+
+      <div class="stage-wrapper" id="stage-wrapper">
+        <div class="stage-media-frame" id="stage-media-frame">
+          <div class="stage-empty" id="stage-empty">
+            <span class="stage-empty-icon">▷</span>
+            <span class="stage-empty-text">Select a body below to watch</span>
+          </div>
+          <!-- YouTube iframe gets injected here by JS -->
+        </div>
+
+        <div class="stage-footer">
+          <div>
+            <p class="stage-title placeholder" id="stage-title">No entry selected</p>
+            <p class="stage-meta" id="stage-meta">—</p>
+          </div>
+          <span class="stage-badge" id="stage-badge" style="display:none;">▶ Now Playing</span>
+        </div>
+      </div>
+    </section>
 
     <!-- AGE CALCULATOR -->
     <section class="age-calculator">
@@ -505,11 +819,12 @@
       <p class="planets-section-label">Bodies — 1 Star · 8 planets · 1 Satellite · 1 Dwarf</p>
 
       <!-- ── SUN ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/sun.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">00</span>
         </div>
         <div class="planet-details">
@@ -548,11 +863,12 @@
       </article>
 
       <!-- ── MOON ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/moon.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">01</span>
         </div>
         <div class="planet-details">
@@ -590,11 +906,12 @@
       </article>
 
       <!-- ── MERCURY ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/1-mercury.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">02</span>
         </div>
         <div class="planet-details">
@@ -648,11 +965,12 @@
       </article>
 
       <!-- ── VENUS ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/2-venus.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">03</span>
         </div>
         <div class="planet-details">
@@ -705,11 +1023,12 @@
       </article>
 
       <!-- ── EARTH ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
-            <source src="../assets/video/3-earth.mp4" type="video/mp4">
+            <source src="../assets/video/3-earth2.0.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">04</span>
         </div>
         <div class="planet-details">
@@ -748,11 +1067,12 @@
       </article>
 
       <!-- ── MARS ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
-            <source src="../assets/video/4-mars.mp4" type="video/mp4">
+            <source src="../assets/video/4-mars2.0.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">05</span>
         </div>
         <div class="planet-details">
@@ -806,11 +1126,12 @@
       </article>
 
       <!-- ── JUPITER ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
-            <source src="../assets/video/5-jupiter.mp4" type="video/mp4">
+            <source src="../assets/video/5-jupiter2.0.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">06</span>
         </div>
         <div class="planet-details">
@@ -864,9 +1185,12 @@
       </article>
 
       <!-- ── SATURN ── -->
-      <article class="planet-entry">
-        <div class="planet-visual has-ring" style="--planet-color: #d4b483; --planet-glow: rgba(212,180,131,0.18);">
-          <div class="planet-visual-inner"></div>
+      <article class="planet-entry" data-youtube="">
+        <div class="planet-visual">
+          <video class="planet-media" autoplay muted loop playsinline>
+            <source src="../../assets/video/6-saturn.mp4" type="video/mp4">
+          </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">07</span>
         </div>
         <div class="planet-details">
@@ -920,11 +1244,12 @@
       </article>
 
       <!-- ── URANUS ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
-            <source src="../assets/video/7-uranus.mp4" type="video/mp4">
+            <source src="../assets/video/7-uranus2.0.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">08</span>
         </div>
         <div class="planet-details">
@@ -978,11 +1303,12 @@
       </article>
 
       <!-- ── NEPTUNE ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual" style="--planet-color: #3f60d4; --planet-glow: rgba(63,96,212,0.2);">
           <video class="planet-media" autoplay muted loop playsinline>
-            <source src="../assets/video/8-neptune.mp4" type="video/mp4">
+            <source src="../assets/video/8-neptune3.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">09</span>
         </div>
         <div class="planet-details">
@@ -1036,11 +1362,12 @@
       </article>
 
       <!-- ── PLUTO ── -->
-      <article class="planet-entry">
+      <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/9-pluto.mp4" type="video/mp4">
           </video>
+          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">10</span>
         </div>
         <div class="planet-details">
@@ -1102,9 +1429,38 @@
     -->
 
     </section>
+
+    <!-- SOURCE CODE -->
+    <section class="source-section">
+      <p class="source-label">Source — Python Script</p>
+
+      <div class="source-wrapper">
+        <div class="source-header">
+          <span class="source-filename" id="source-filename">No file loaded</span>
+          <div class="source-actions">
+            <button class="source-btn" id="source-copy-btn" style="display:none;">Copy</button>
+            <button class="source-btn" id="source-load-btn">Load .txt</button>
+          </div>
+        </div>
+
+        <div class="source-body" id="source-body">
+          <div class="source-drop" id="source-drop">
+            <span class="source-drop-icon">⌥</span>
+            <span class="source-drop-text">Drop your .txt file here, or click to browse</span>
+            <p class="source-drop-sub">Expects a .txt file containing your Python script</p>
+          </div>
+        </div>
+
+        <input type="file" id="source-file-input" accept=".txt,text/plain" />
+      </div>
+    </section>
+
   </main>
 
+  <div id="footer"></div>
+
   <script src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/footer.js"></script>
 
   <script>
     // Orbital periods in Earth years
@@ -1175,20 +1531,190 @@
     }
 
     input.addEventListener('input', updateAges);
+
+    // ── MAIN STAGE: load a planet's YouTube video on click ──
+    const stageFrame = document.getElementById('stage-media-frame');
+    const stageEmptyState = document.getElementById('stage-empty');
+    const stageTitleEl = document.getElementById('stage-title');
+    const stageMetaEl = document.getElementById('stage-meta');
+    const stageBadgeEl = document.getElementById('stage-badge');
+    const planetEntries = document.querySelectorAll('.planet-entry');
+
+    let activePlanetEntry = null;
+
+    // Accepts a raw YouTube video ID, or a full/short YouTube URL, and
+    // returns the video ID to embed.
+    function extractYouTubeId(value) {
+      if (!value) return null;
+      const trimmed = value.trim();
+      if (!trimmed) return null;
+
+      // Already looks like a bare video ID
+      if (/^[\w-]{11}$/.test(trimmed)) return trimmed;
+
+      try {
+        const url = new URL(trimmed);
+        if (url.hostname.includes('youtu.be')) {
+          return url.pathname.slice(1);
+        }
+        if (url.hostname.includes('youtube.com')) {
+          if (url.pathname.startsWith('/embed/')) {
+            return url.pathname.split('/embed/')[1];
+          }
+          return url.searchParams.get('v');
+        }
+      } catch (e) {
+        // not a valid URL, fall through
+      }
+      return null;
+    }
+
+    function loadPlanetIntoStage(entry) {
+      const videoId = extractYouTubeId(entry.dataset.youtube);
+      const name = entry.querySelector('.planet-name')?.textContent || 'Untitled';
+      const type = entry.querySelector('.planet-type')?.textContent || '';
+
+      if (activePlanetEntry) activePlanetEntry.classList.remove('active');
+      activePlanetEntry = entry;
+      entry.classList.add('active');
+
+      stageTitleEl.textContent = name;
+      stageTitleEl.classList.remove('placeholder');
+      stageMetaEl.textContent = type;
+      stageBadgeEl.style.display = 'inline-flex';
+
+      if (videoId) {
+        stageEmptyState.style.display = 'none';
+        stageFrame.querySelectorAll('iframe').forEach(f => f.remove());
+
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
+        iframe.title = name;
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        stageFrame.appendChild(iframe);
+      } else {
+        // No video linked yet for this entry
+        stageFrame.querySelectorAll('iframe').forEach(f => f.remove());
+        stageEmptyState.style.display = 'flex';
+        stageEmptyState.querySelector('.stage-empty-text').textContent =
+          `No YouTube video linked for ${name} yet`;
+      }
+
+      if (window.innerWidth < 768) {
+        document.querySelector('.stage-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    planetEntries.forEach(entry => {
+      entry.addEventListener('click', () => loadPlanetIntoStage(entry));
+      entry.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          loadPlanetIntoStage(entry);
+        }
+      });
+      entry.setAttribute('tabindex', '0');
+      entry.setAttribute('role', 'button');
+    });
+
+    // ── SOURCE CODE: auto-load from a path, with drag/drop or file picker as fallback ──
+
+    // 👉 SET YOUR FILE PATH HERE.
+    // Relative to this HTML file's location. Example: "../assets/scripts/main.py.txt"
+    // Leave as an empty string "" to disable auto-loading and only allow manual upload.
+    const SOURCE_FILE_PATH = "../assets/scripts/final_script.txt";
+
+    const sourceBody = document.getElementById('source-body');
+    const sourceDrop = document.getElementById('source-drop');
+    const sourceFileInput = document.getElementById('source-file-input');
+    const sourceLoadBtn = document.getElementById('source-load-btn');
+    const sourceCopyBtn = document.getElementById('source-copy-btn');
+    const sourceFilenameEl = document.getElementById('source-filename');
+
+    let currentSourceText = '';
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function renderSource(text, filename) {
+      currentSourceText = text;
+      sourceFilenameEl.textContent = filename;
+      sourceBody.innerHTML = `<pre><code>${escapeHtml(text)}</code></pre>`;
+      sourceCopyBtn.style.display = 'inline-block';
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+      const isTxt = file.name.toLowerCase().endsWith('.txt') || file.type === 'text/plain';
+      if (!isTxt) {
+        sourceFilenameEl.textContent = 'Please choose a .txt file';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = e => renderSource(e.target.result, file.name);
+      reader.onerror = () => {
+        sourceFilenameEl.textContent = 'Could not read file';
+      };
+      reader.readAsText(file);
+    }
+
+    sourceLoadBtn.addEventListener('click', () => sourceFileInput.click());
+    sourceDrop.addEventListener('click', () => sourceFileInput.click());
+
+    sourceFileInput.addEventListener('change', e => {
+      handleFile(e.target.files[0]);
+    });
+
+    ['dragover', 'dragenter'].forEach(evt => {
+      sourceBody.addEventListener(evt, e => {
+        e.preventDefault();
+        sourceDrop.classList.add('dragover');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(evt => {
+      sourceBody.addEventListener(evt, e => {
+        e.preventDefault();
+        sourceDrop.classList.remove('dragover');
+      });
+    });
+
+    sourceBody.addEventListener('drop', e => {
+      const file = e.dataTransfer?.files?.[0];
+      handleFile(file);
+    });
+
+    sourceCopyBtn.addEventListener('click', () => {
+      if (!currentSourceText) return;
+      navigator.clipboard.writeText(currentSourceText).then(() => {
+        const original = sourceCopyBtn.textContent;
+        sourceCopyBtn.textContent = 'Copied';
+        setTimeout(() => { sourceCopyBtn.textContent = original; }, 1200);
+      });
+    });
+
+    // Auto-load the configured file on page load, if a path was set
+    if (SOURCE_FILE_PATH) {
+      fetch(SOURCE_FILE_PATH)
+        .then(res => {
+          if (!res.ok) throw new Error('File not found');
+          return res.text();
+        })
+        .then(text => {
+          const filename = SOURCE_FILE_PATH.split('/').pop();
+          renderSource(text, filename);
+        })
+        .catch(() => {
+          // Fall back silently to the drop zone if the file isn't there
+          sourceFilenameEl.textContent = 'No file loaded';
+        });
+    }
   </script>
 
 </body>
 </html>
-
-
-<!--
-const isRoot = /\/[^/]+mma-lab-acts\/?(?:index\.html)?$/.test(path);
-const base   = isRoot ? "./" : "../";
-
-<a class="nav-logo" href="${base}index.html">
-  <img
-    src="${base}/assets/img/sun.png" width="40"
-    alt="Site logo"
-    class="nav-logo-img"/>
-</a>
--->
