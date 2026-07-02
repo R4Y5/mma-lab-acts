@@ -1569,6 +1569,52 @@
       return null;
     }
 
+    // Builds a looping YouTube embed URL for a given video ID.
+    // loop=1 requires playlist=<same id> to actually loop a single video.
+    function buildYouTubeEmbedUrl(videoId, { autoplay = true, muted = true } = {}) {
+      const params = new URLSearchParams({
+        rel: '0',
+        loop: '1',
+        playlist: videoId
+      });
+      if (autoplay) params.set('autoplay', '1');
+      if (muted) params.set('mute', '1');
+      return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+    }
+
+    function loadVideoIntoStage(videoId, { title, meta, markActive } = {}) {
+      if (markActive === undefined || markActive) {
+        if (activePlanetEntry) activePlanetEntry.classList.remove('active');
+        activePlanetEntry = null;
+      }
+
+      if (title !== undefined) {
+        stageTitleEl.textContent = title;
+        stageTitleEl.classList.remove('placeholder');
+      }
+      if (meta !== undefined) {
+        stageMetaEl.textContent = meta;
+      }
+      stageBadgeEl.style.display = 'inline-flex';
+
+      if (videoId) {
+        stageEmptyState.style.display = 'none';
+        stageFrame.querySelectorAll('iframe').forEach(f => f.remove());
+
+        const iframe = document.createElement('iframe');
+        iframe.src = buildYouTubeEmbedUrl(videoId);
+        iframe.title = title || 'Video';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        stageFrame.appendChild(iframe);
+      } else {
+        stageFrame.querySelectorAll('iframe').forEach(f => f.remove());
+        stageEmptyState.style.display = 'flex';
+        stageEmptyState.querySelector('.stage-empty-text').textContent =
+          `No YouTube video linked yet`;
+      }
+    }
+
     function loadPlanetIntoStage(entry) {
       const videoId = extractYouTubeId(entry.dataset.youtube);
       const name = entry.querySelector('.planet-name')?.textContent || 'Untitled';
@@ -1578,28 +1624,7 @@
       activePlanetEntry = entry;
       entry.classList.add('active');
 
-      stageTitleEl.textContent = name;
-      stageTitleEl.classList.remove('placeholder');
-      stageMetaEl.textContent = type;
-      stageBadgeEl.style.display = 'inline-flex';
-
-      if (videoId) {
-        stageEmptyState.style.display = 'none';
-        stageFrame.querySelectorAll('iframe').forEach(f => f.remove());
-
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0`;
-        iframe.title = name;
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-        iframe.allowFullscreen = true;
-        stageFrame.appendChild(iframe);
-      } else {
-        // No video linked yet for this entry
-        stageFrame.querySelectorAll('iframe').forEach(f => f.remove());
-        stageEmptyState.style.display = 'flex';
-        stageEmptyState.querySelector('.stage-empty-text').textContent =
-          `No YouTube video linked for ${name} yet`;
-      }
+      loadVideoIntoStage(videoId, { title: name, meta: type, markActive: false });
 
       if (window.innerWidth < 768) {
         document.querySelector('.stage-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1617,6 +1642,20 @@
       entry.setAttribute('tabindex', '0');
       entry.setAttribute('role', 'button');
     });
+
+    // ── STANDALONE STAGE VIDEO ──
+    // Not tied to any planet card — loads directly into the Stage on page load, looped.
+    const STANDALONE_STAGE_VIDEO = "https://youtu.be/lhRP7yla6KI";
+    const STANDALONE_STAGE_TITLE = "Solar System";
+    const STANDALONE_STAGE_META = "Full Animation";
+
+    if (STANDALONE_STAGE_VIDEO) {
+      const standaloneId = extractYouTubeId(STANDALONE_STAGE_VIDEO);
+      loadVideoIntoStage(standaloneId, {
+        title: STANDALONE_STAGE_TITLE,
+        meta: STANDALONE_STAGE_META
+      });
+    }
 
     // ── SOURCE CODE: auto-load from a path, with drag/drop or file picker as fallback ──
 

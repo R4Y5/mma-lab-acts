@@ -442,37 +442,24 @@
       <p class="stage-label">Stage — Final Output</p>
 
       <div class="stage-wrapper" id="stage-wrapper">
-        <!-- Populated by JS; shows placeholder until an entry is selected -->
-        <div class="stage-media is-empty" id="stage-empty">
-          <span class="stage-empty-icon">▷</span>
-          <span class="stage-empty-text">Select an entry below to preview</span>
-        </div>
-
-        <!-- Video element (hidden until loaded) -->
-        <video
+        <!-- Standalone looping YouTube embed -->
+        <iframe
           class="stage-media"
-          id="stage-video"
-          autoplay
-          muted
-          loop
-          playsinline
-          style="display:none;"
-        ></video>
-
-        <!-- Image element (hidden until loaded) -->
-        <img
-          class="stage-media"
-          id="stage-image"
-          alt="Rotoscope output"
-          style="display:none;"
-        />
+          id="stage-youtube"
+          src="https://www.youtube.com/embed/lslJisZzx8Q?autoplay=1&mute=1&loop=1&playlist=lslJisZzx8Q&controls=1&rel=0"
+          title="Rotoscope — Final Output"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          style="border:0;"
+        ></iframe>
 
         <div class="stage-footer">
           <div>
-            <p class="stage-title placeholder" id="stage-title">No entry selected</p>
-            <p class="stage-meta" id="stage-meta">—</p>
+            <p class="stage-title" id="stage-title">Rotoscope — Final Output</p>
+            <p class="stage-meta" id="stage-meta">Looping preview · YouTube</p>
           </div>
-          <span class="stage-badge" id="stage-badge" style="display:none;">▶ Now Showing</span>
+          <span class="stage-badge" id="stage-badge">▶ Now Showing</span>
         </div>
       </div>
     </section>
@@ -893,70 +880,6 @@
 
   <script src="../assets/js/navbar.js"></script>
   <script src="../assets/js/footer.js"></script>
-
-
-  <script>
-    const entries = document.querySelectorAll('.roto-entry');
-
-    const stageEmpty  = document.getElementById('stage-empty');
-    const stageVideo  = document.getElementById('stage-video');
-    const stageImage  = document.getElementById('stage-image');
-    const stageTitle  = document.getElementById('stage-title');
-    const stageMeta   = document.getElementById('stage-meta');
-    const stageBadge  = document.getElementById('stage-badge');
-
-    let activeEntry = null;
-
-    function loadIntoStage(entry) {
-      // Deactivate old
-      if (activeEntry) activeEntry.classList.remove('active');
-      activeEntry = entry;
-      entry.classList.add('active');
-
-      const type  = entry.dataset.type;   // 'video' or 'image'
-      const src   = entry.dataset.src;
-      const title = entry.dataset.title;
-      const meta  = entry.dataset.meta;
-
-      // Update footer
-      stageTitle.textContent = title;
-      stageTitle.classList.remove('placeholder');
-      stageMeta.textContent  = meta;
-      stageBadge.style.display = 'inline-flex';
-
-      // Hide all, then show correct one
-      stageEmpty.style.display = 'none';
-      stageVideo.style.display = 'none';
-      stageImage.style.display = 'none';
-
-      if (type === 'video') {
-        stageVideo.src = src;
-        stageVideo.style.display = 'block';
-        stageVideo.load();
-        stageVideo.play();
-      } else {
-        stageImage.src = src;
-        stageImage.style.display = 'block';
-      }
-
-      // Smooth scroll to stage on mobile
-      if (window.innerWidth < 768) {
-        document.querySelector('.stage-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-
-    entries.forEach(entry => {
-      entry.addEventListener('click', () => loadIntoStage(entry));
-      entry.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          loadIntoStage(entry);
-        }
-      });
-      entry.setAttribute('tabindex', '0');
-      entry.setAttribute('role', 'button');
-    });
-  </script>
 
 </body>
 </html>
