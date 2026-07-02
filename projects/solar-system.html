@@ -200,47 +200,6 @@
       border-radius: 3px;
     }
 
-    /* planet entries become clickable "load into stage" cards */
-    .planet-entry {
-      cursor: pointer;
-    }
-
-    .planet-entry.active {
-      border-color: var(--accent-border);
-      background: var(--accent-bg);
-    }
-
-    .planet-entry.active .planet-name {
-      color: var(--accent);
-    }
-
-    .planet-play-hint {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(232,255,107,0.06);
-      opacity: 0;
-      transition: opacity 0.25s;
-      pointer-events: none;
-    }
-
-    .planet-entry:hover .planet-play-hint {
-      opacity: 1;
-    }
-
-    .planet-play-hint span {
-      font-size: 0.58rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      border: 1px solid var(--accent-border);
-      background: rgba(0,0,0,0.55);
-      padding: 4px 10px;
-      border-radius: 3px;
-    }
-
     /* ── AGE CALCULATOR ── */
     .age-calculator {
       max-width: 900px;
@@ -824,7 +783,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/sun.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">00</span>
         </div>
         <div class="planet-details">
@@ -868,7 +826,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/moon.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">01</span>
         </div>
         <div class="planet-details">
@@ -911,7 +868,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/1-mercury.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">02</span>
         </div>
         <div class="planet-details">
@@ -970,7 +926,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/2-venus.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">03</span>
         </div>
         <div class="planet-details">
@@ -1028,7 +983,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/3-earth2.0.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">04</span>
         </div>
         <div class="planet-details">
@@ -1072,7 +1026,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/4-mars2.0.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">05</span>
         </div>
         <div class="planet-details">
@@ -1131,7 +1084,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/5-jupiter2.0.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">06</span>
         </div>
         <div class="planet-details">
@@ -1188,9 +1140,8 @@
       <article class="planet-entry" data-youtube="">
         <div class="planet-visual">
           <video class="planet-media" autoplay muted loop playsinline>
-            <source src="../../assets/video/6-saturn1.mp4" type="video/mp4">
+            <source src="../../assets/video/6-saturnnew.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">07</span>
         </div>
         <div class="planet-details">
@@ -1249,7 +1200,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/7-uranus2.0.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">08</span>
         </div>
         <div class="planet-details">
@@ -1308,7 +1258,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/8-neptune3.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">09</span>
         </div>
         <div class="planet-details">
@@ -1367,7 +1316,6 @@
           <video class="planet-media" autoplay muted loop playsinline>
             <source src="../assets/video/9-pluto.mp4" type="video/mp4">
           </video>
-          <div class="planet-play-hint"><span>View in Stage</span></div>
           <span class="planet-num">10</span>
         </div>
         <div class="planet-details">
@@ -1532,15 +1480,14 @@
 
     input.addEventListener('input', updateAges);
 
-    // ── MAIN STAGE: load a planet's YouTube video on click ──
+    // ── MAIN STAGE ──
+    // The stage now only ever plays the standalone video below. Individual
+    // planet entries are no longer clickable and do not load into the stage.
     const stageFrame = document.getElementById('stage-media-frame');
     const stageEmptyState = document.getElementById('stage-empty');
     const stageTitleEl = document.getElementById('stage-title');
     const stageMetaEl = document.getElementById('stage-meta');
     const stageBadgeEl = document.getElementById('stage-badge');
-    const planetEntries = document.querySelectorAll('.planet-entry');
-
-    let activePlanetEntry = null;
 
     // Accepts a raw YouTube video ID, or a full/short YouTube URL, and
     // returns the video ID to embed.
@@ -1582,12 +1529,7 @@
       return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
     }
 
-    function loadVideoIntoStage(videoId, { title, meta, markActive } = {}) {
-      if (markActive === undefined || markActive) {
-        if (activePlanetEntry) activePlanetEntry.classList.remove('active');
-        activePlanetEntry = null;
-      }
-
+    function loadVideoIntoStage(videoId, { title, meta } = {}) {
       if (title !== undefined) {
         stageTitleEl.textContent = title;
         stageTitleEl.classList.remove('placeholder');
@@ -1614,34 +1556,6 @@
           `No YouTube video linked yet`;
       }
     }
-
-    function loadPlanetIntoStage(entry) {
-      const videoId = extractYouTubeId(entry.dataset.youtube);
-      const name = entry.querySelector('.planet-name')?.textContent || 'Untitled';
-      const type = entry.querySelector('.planet-type')?.textContent || '';
-
-      if (activePlanetEntry) activePlanetEntry.classList.remove('active');
-      activePlanetEntry = entry;
-      entry.classList.add('active');
-
-      loadVideoIntoStage(videoId, { title: name, meta: type, markActive: false });
-
-      if (window.innerWidth < 768) {
-        document.querySelector('.stage-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-
-    planetEntries.forEach(entry => {
-      entry.addEventListener('click', () => loadPlanetIntoStage(entry));
-      entry.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          loadPlanetIntoStage(entry);
-        }
-      });
-      entry.setAttribute('tabindex', '0');
-      entry.setAttribute('role', 'button');
-    });
 
     // ── STANDALONE STAGE VIDEO ──
     // Not tied to any planet card — loads directly into the Stage on page load, looped.
